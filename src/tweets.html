@@ -1,0 +1,17 @@
+{% for search in searches %}
+
+<h2>{{search.search}}</h2>
+
+<table>
+{% for tweet in search.tweets %}
+
+<tr>
+	<td>{{forloop.counter}}</td>
+	<td>{{tweet.date}}</td>
+	<td>{{tweet.text}}</td>
+</tr>
+
+{% endfor %}
+</table>
+
+{% endfor %}

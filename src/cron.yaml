@@ -1,0 +1,4 @@
+cron:
+- description: GetTweets
+  url: /cron
+  schedule: every 30 minutes
