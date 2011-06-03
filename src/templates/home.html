@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block js %}
+<script language="javascript" type="text/javascript">
+function addMine() {
+	dojo.xhrPost({
+		url:'/xhr/AddMine',
+		content: {search:$('search').value},
+		handleAs: 'json',
+		load: function(response, ioArgs) {
+			populateMines(response.mines);
+		}
+	});
+}
+function deleteMine(search, key) {
+	if (confirm('Are you sure you want to delete ' + search)) {
+		dojo.xhrPost({
+			url:'/xhr/DeleteMine',
+			content: {key:key},
+			handleAs: 'json',
+			load: function(response, ioArgs) {
+				populateMines(response.mines);
+			}
+		});
+	}
+}
+
+function populateMines(mines) {
+	if (mines.length == 0) {
+		$('mines').innerHTML = '<p>None created yet!</p>';
+		return;
+	}
+
+	$('mines').innerHTML = '';
+	
+	var ul = document.createElement('ul');
+	var li, a;
+	for (var i = 0; i < mines.length; i++) {
+		li = document.createElement('li');
+		a = document.createElement('a');
+		a.href = '/mine/' + mines[i].key;
+		a.innerHTML = mines[i].search + ' ('+mines[i].count+')';
+		li.appendChild(a);
+
+		li.appendChild(document.createTextNode(' | '));
+		
+		a = document.createElement('a');
+		a.href = 'javascript: void(0);';
+		(function(mine) { a.onclick = function() {
+			deleteMine(mine.search, mine.key);
+		} })(mines[i]);
+		a.innerHTML = 'Delete';		
+		li.appendChild(a);
+
+		ul.appendChild(li);
+	}
+	$('mines').appendChild(ul);
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<h3>Your Mines:</h3>
+
+{% if mines %}
+<div id="mines">
+<ul>
+	{% for mine in mines %}
+		<li><a href="/mine/{{mine.key}}">{{mine.search}} ({{mine.count}})</a> | <a href="javascript: void(0);" onclick="deleteMine('{{mine.search}}', '{{mine.key}}');">Delete</a></li>
+	{% endfor %}
+</ul>
+</div>
+{% else %}
+<div id="mines">
+<p>None created yet!</p>
+</div>
+{% endif %}
+
+<h3>Add Mine</h3>
+<input type="text" id="search" />
+<button onclick="addMine();">Add</button>
+{% endblock %}

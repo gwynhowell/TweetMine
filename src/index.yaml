@@ -12,6 +12,12 @@ indexes:
 
 - kind: Tweet
   properties:
+  - name: mine
+  - name: date
+    direction: desc
+
+- kind: Tweet
+  properties:
   - name: search
   - name: date
     direction: desc

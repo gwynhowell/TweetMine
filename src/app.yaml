@@ -7,5 +7,23 @@ builtins:
 - datastore_admin: on
 
 handlers:
+- url: /css
+  static_dir: css
+  
+- url: /images
+  static_dir: images
+  
+- url: /js
+  static_dir: js
+
+- url: /cron
+  script: tweetmine/cron.py
+  login: admin
+
+- url: /tasks/.*
+  script: tweetmine/tasks.py
+  login: admin
+  
 - url: /.*
-  script: main.py
+  script: tweetmine/main.py
+  login: required
